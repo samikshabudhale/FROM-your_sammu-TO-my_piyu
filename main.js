@@ -13,7 +13,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const audioHint = document.querySelector(".audio-hint");
 
   let partnerName = "PIYU";
-  let hoverCount = 0;
+
+  // counts
+  let noHoverCount = 0;       // for NO teasing movement
+  let noBoldCount = 0;        // show "Bold choice" only twice
+  let yesTeaseCount = 0;      // yes hover tease only a few times
 
   // 🎵 Audio setup
   if (audio) audio.volume = parseFloat(volumeSlider?.value || "0.7");
@@ -65,11 +69,15 @@ document.addEventListener("DOMContentLoaded", function () {
       typeWriterEffect(document.querySelector(".typed-text"), "You and me, Valentine style?");
     }, 300);
 
-    // ✅ smooth movement setup
+    // smooth movement setup
     if (noButton) {
       noButton.style.position = "relative";
       noButton.style.transition = "transform 0.35s ease";
       noButton.style.willChange = "transform";
+    }
+    if (yesButton) {
+      yesButton.style.transition = "transform 0.18s ease";
+      yesButton.style.willChange = "transform";
     }
   }
 
@@ -102,37 +110,67 @@ document.addEventListener("DOMContentLoaded", function () {
     createHearts();
   });
 
-  // 😌 NO — slow playful tease (never disappears)
+  // 😌 NO — slow playful tease (moves only after a few tries)
   function teaseNoButton() {
-    hoverCount++;
+    noHoverCount++;
 
-    // ✅ First 5 tries: no movement (feels natural)
-    if (hoverCount <= 5) return;
+    // First 5 hovers: no movement
+    if (noHoverCount <= 5) return;
 
-    // ✅ 6–10 tries: tiny slides left/right
-    if (hoverCount <= 10) {
-      const dir = hoverCount % 2 === 0 ? 1 : -1;
+    // 6–10: tiny slides
+    if (noHoverCount <= 10) {
+      const dir = noHoverCount % 2 === 0 ? 1 : -1;
       noButton.style.transform = `translateX(${dir * 25}px)`;
       return;
     }
 
-    // ✅ After 10 tries: slightly bigger slides, still not insane
-    const dir = hoverCount % 2 === 0 ? 1 : -1;
-    const slide = Math.min(80, 25 + (hoverCount - 10) * 5);
+    // After 10: slightly bigger slides but still reasonable
+    const dir = noHoverCount % 2 === 0 ? 1 : -1;
+    const slide = Math.min(85, 30 + (noHoverCount - 10) * 5);
     noButton.style.transform = `translateX(${dir * slide}px)`;
 
-    // ✅ Cute tease line only once
-    if (hoverCount === 12) {
+    // cute line once
+    if (noHoverCount === 12) {
       questionText.innerHTML += `<br><span class="no-choice-text">Still thinking? 😌</span>`;
     }
   }
 
   noButton?.addEventListener("mouseenter", teaseNoButton);
 
-  // If he clicks NO successfully, just tease (don’t break flow)
+  // If he clicks NO successfully: show "Bold choice 😏" only twice
   noButton?.addEventListener("click", () => {
-    questionText.innerHTML += `<br><span class="no-choice-text">Bold choice 😏</span>`;
+    if (noBoldCount < 2) {
+      noBoldCount++;
+      questionText.innerHTML += `<br><span class="no-choice-text">Bold choice 😏</span>`;
+    }
   });
+
+  // 😇 YES — cute frustrating: tiny “shy bounce” when he tries to click/hover
+  function teaseYesButton() {
+    yesTeaseCount++;
+
+    // only tease first few times so it doesn't annoy
+    if (yesTeaseCount > 6) return;
+
+    // quick cute bounce
+    yesButton.style.transform = "scale(1.06) translateY(-2px)";
+    setTimeout(() => {
+      yesButton.style.transform = "scale(1) translateY(0)";
+    }, 160);
+
+    // add small teasing line only on first 2 tries
+    if (yesTeaseCount === 1) {
+      questionText.innerHTML += `<br><span class="no-choice-text">Hehe… I saw that 😌</span>`;
+    }
+    if (yesTeaseCount === 2) {
+      questionText.innerHTML += `<br><span class="no-choice-text">Go on then 😏</span>`;
+    }
+  }
+
+  // Trigger tease when mouse approaches YES
+  yesButton?.addEventListener("mouseenter", teaseYesButton);
+  // And also when he presses on it (mobile)
+  yesButton?.addEventListener("touchstart", teaseYesButton, { passive: true });
 
   clickButton.addEventListener("click", revealChoices);
 });
