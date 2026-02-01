@@ -1,67 +1,122 @@
-document.addEventListener("DOMContentLoaded", () => {
-
+document.addEventListener("DOMContentLoaded", function () {
   const audio = document.getElementById("background-music");
+  const muteButton = document.getElementById("mute-button");
+  const volumeSlider = document.getElementById("volume-slider");
+  const icon = muteButton ? muteButton.querySelector("i") : null;
 
-  const startBtn = document.getElementById("start-btn");
-  const yesBtn = document.getElementById("yes-btn");
-  const noBtn = document.getElementById("no-btn");
-
-  const questionText = document.getElementById("question-text");
+  const clickButton = document.querySelector(".click-box button");
   const choiceBox = document.querySelector(".choice-box");
   const threedBox = document.querySelector(".threed-box");
+  const questionText = document.querySelector(".question-box h1");
+  const yesButton = document.querySelector(".choice-box button:first-child");
+  const noButton = document.querySelector(".choice-box button:last-child");
 
-  const volumeSlider = document.getElementById("volume-slider");
-  const muteBtn = document.getElementById("mute-button");
-  const icon = muteBtn.querySelector("i");
+  // ✅ If the button isn't found, nothing can work
+  if (!clickButton || !choiceBox || !questionText) {
+    console.log("Missing required elements:", { clickButton, choiceBox, questionText });
+    return;
+  }
 
   let partnerName = "PIYU";
-  let noCount = 0;
+  let noClickCount = 0;
 
-  // Volume
-  audio.volume = volumeSlider.value;
-  volumeSlider.addEventListener("input", () => {
-    audio.volume = volumeSlider.value;
-  });
+  // ---------------------------
+  // Audio controls
+  // ---------------------------
+  if (audio && volumeSlider) {
+    audio.volume = parseFloat(volumeSlider.value || "0.7");
 
-  muteBtn.addEventListener("click", () => {
-    audio.muted = !audio.muted;
-    icon.className = audio.muted ? "fa fa-volume-off" : "fa fa-volume-up";
-  });
+    volumeSlider.addEventListener("input", () => {
+      audio.volume = parseFloat(volumeSlider.value || "0.7");
+      if (icon && !audio.muted) {
+        icon.className = audio.volume === 0 ? "fa fa-volume-off" : "fa fa-volume-up";
+      }
+    });
+  }
 
-  // Start
-  startBtn.addEventListener("click", () => {
-    audio.play().catch(() => {});
-    startBtn.style.display = "none";
+  if (audio && muteButton) {
+    muteButton.addEventListener("click", () => {
+      audio.muted = !audio.muted;
+      if (icon) icon.className = audio.muted ? "fa fa-volume-off" : "fa fa-volume-up";
+    });
+  }
+
+  // ---------------------------
+  // Typewriter effect
+  // ---------------------------
+  function typeWriterEffect(element, text, speed = 60) {
+    if (!element) return;
+    element.innerHTML = "";
+    let i = 0;
+
+    function typing() {
+      if (i < text.length) {
+        element.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typing, speed);
+      }
+    }
+    typing();
+  }
+
+  // ---------------------------
+  // Click to reveal choices (and start music)
+  // ---------------------------
+  function revealChoices() {
+    if (audio) {
+      if (volumeSlider) audio.volume = parseFloat(volumeSlider.value || "0.7");
+      audio.play().catch(() => {});
+    }
+
+    clickButton.style.display = "none";
     choiceBox.classList.remove("hide");
 
-    questionText.innerHTML = `
-      <span class="partner-name">${partnerName}</span><br>
-      You and me, Valentine style?
-    `;
-  });
+    // Show name + typed line
+    questionText.innerHTML = `<span class="partner-name">${partnerName}</span><br><span class="typed-text"></span>`;
+    const typedTextElement = document.querySelector(".typed-text");
+    setTimeout(() => {
+      typeWriterEffect(typedTextElement, "You and me, Valentine style?");
+    }, 200);
+  }
 
-  // YES
-  yesBtn.addEventListener("click", () => {
-    questionText.innerHTML = `
-      <span class="partner-name">${partnerName}</span><br>
-      <span class="love-text">Looks like a plan 💖</span><br>
-      <span class="love-text">I knew you couldn’t resist 😏</span>
-    `;
-    choiceBox.style.display = "none";
-    threedBox.classList.remove("hide");
-  });
+  // Attach click
+  clickButton.addEventListener("click", revealChoices);
 
-  // NO (cute, not aggressive)
-  noBtn.addEventListener("click", () => {
-    noCount++;
+  // ---------------------------
+  // Yes
+  // ---------------------------
+  if (yesButton) {
+    yesButton.addEventListener("click", () => {
+      questionText.innerHTML =
+        `<span class="partner-name">${partnerName}</span><br>` +
+        `<span class="love-text">Looks like a plan 💖</span><br>` +
+        `<span class="love-text">I knew you couldn’t resist 😏</span>`;
 
-    if (noCount <= 2) {
-      questionText.innerHTML += `<br><em>Bold choice 😌</em>`;
-      noBtn.style.transform = `translateX(${Math.random() * 80 - 40}px)`;
-    } else {
-      noBtn.style.transform = `translateX(${Math.random() * 140 - 70}px)`;
-      yesBtn.style.transform = "scale(1.08)";
-    }
-  });
+      choiceBox.style.display = "none";
+      if (threedBox) threedBox.classList.remove("hide");
+    });
+  }
 
+  // ---------------------------
+  // No (shrink + grow yes, fun mode)
+  // ---------------------------
+  if (noButton && yesButton) {
+    noButton.addEventListener("click", () => {
+      noClickCount++;
+
+      if (noClickCount <= 6) {
+        const newNoSize = Math.max(10, 18 - noClickCount * 2);
+        const newYesSize = 18 + noClickCount * 4;
+
+        noButton.style.fontSize = `${newNoSize}px`;
+        noButton.style.padding = `${newNoSize / 2}px ${newNoSize}px`;
+
+        yesButton.style.fontSize = `${newYesSize}px`;
+        yesButton.style.padding = `${newYesSize / 2}px ${newYesSize}px`;
+      } else {
+        // after many tries, tease (don't instantly remove)
+        questionText.innerHTML += `<br><span class="no-choice-text">Okay okay… you’re persistent 😌</span>`;
+      }
+    });
+  }
 });
