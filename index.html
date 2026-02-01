@@ -17,85 +17,65 @@
 
 <body>
 
-    <!-- 🎵 Background Music -->
-    <audio id="background-music" preload="auto" loop>
-        <source src="Ok%20Jaanu%20Title%20Track.mp3" type="audio/mpeg">
-    </audio>
+<!-- 🎵 Background Music -->
+<audio id="background-music" preload="auto" loop>
+    <source src="Ok%20Jaanu%20Title%20Track.mp3" type="audio/mpeg">
+</audio>
 
-    <!-- Heart background -->
-    <div class="heart-background">
-        <svg viewBox="0 0 24 24">
-            <defs>
-                <radialGradient id="heart-gradient" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stop-color="var(--color1)" />
-                    <stop offset="50%" stop-color="var(--color2)" />
-                    <stop offset="100%" stop-color="var(--color3)" />
-                </radialGradient>
-            </defs>
-            <path d="M12 4.248c-3.148-5.402-12-3.825-12 2.944
-                     0 4.661 5.571 9.427 12 15.808
-                     6.43-6.381 12-11.147 12-15.808
-                     0-6.792-8.875-8.306-12-2.944z"
-                  fill="url(#heart-gradient)" />
-        </svg>
-    </div>
+<!-- Heart background -->
+<div class="heart-background">
+    <svg viewBox="0 0 24 24">
+        <defs>
+            <radialGradient id="heart-gradient" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#FFB3B3"/>
+                <stop offset="50%" stop-color="#FF9999"/>
+                <stop offset="100%" stop-color="#FF6666"/>
+            </radialGradient>
+        </defs>
+        <path d="M12 4.248c-3.148-5.402-12-3.825-12 2.944
+                 0 4.661 5.571 9.427 12 15.808
+                 6.43-6.381 12-11.147 12-15.808
+                 0-6.792-8.875-8.306-12-2.944z"
+              fill="url(#heart-gradient)"/>
+    </svg>
+</div>
 
-    <div class="body-wrapper background">
-        <nav>
-            <div class="navbar-wrapper">
-                <div class="navlogo"><h2>LoveOh</h2></div>
-                <div class="navlinks"><a href=".">Refresh</a></div>
-            </div>
-        </nav>
+<div class="body-wrapper">
+    <nav class="navbar-wrapper">
+        <h2>LoveOh</h2>
+        <a href="">Refresh</a>
+    </nav>
 
-        <div class="main-wrapper">
+    <main class="main-section-wrapper">
 
-            <div class="main-section-wrapper">
-
-                <div class="question-wrapper">
-                    <div class="question-box">
-                        <h1>I Have a Question to Ask!!!</h1>
-                    </div>
-                </div>
-
-                <div class="choice-wrapper">
-                    <!-- 🔊 Audio hint -->
-                    <p class="audio-hint">🔊 Tap to turn the music on</p>
-
-                    <div class="click-box">
-                        <button>Click to find out</button>
-                    </div>
-
-                    <div class="choice-box hide">
-                        <button>Yes ❤️</button>
-                        <button>No ❌</button>
-                    </div>
-                </div>
-
-                <div class="threed-wrapper">
-                    <div class="threed-box hide">
-                        <img src="assets/bears.gif" alt="Cute bears kissing">
-                    </div>
-                </div>
-
-            </div>
-
-            <aside>
-                <div class="aside right">
-                    <button id="mute-button"><i class="fa fa-volume-up"></i></button>
-                    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
-                </div>
-            </aside>
-
+        <div class="question-box">
+            <h1 id="question-text">I Have a Question to Ask!!!</h1>
         </div>
 
-        <footer>
-            <p>Designed by E ❤️</p>
-        </footer>
+        <p class="music-hint">🔊 Tap to turn the music on</p>
+
+        <div class="click-box">
+            <button id="start-btn">Click to find out</button>
+        </div>
+
+        <div class="choice-box hide">
+            <button id="yes-btn">Yes ❤️</button>
+            <button id="no-btn">No ❌</button>
+        </div>
+
+        <div class="threed-box hide">
+            <img src="assets/bears.gif" alt="cute">
+        </div>
+
+    </main>
+
+    <!-- Volume -->
+    <div class="aside right">
+        <button id="mute-button"><i class="fa fa-volume-up"></i></button>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.7">
     </div>
+</div>
 
-    <!-- Scripts -->
-    <script src="main.js?v=3" defer></script>
-
+<script src="main.js"></script>
 </body>
 </html>
