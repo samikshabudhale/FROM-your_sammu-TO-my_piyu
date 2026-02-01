@@ -13,11 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const audioHint = document.querySelector(".audio-hint");
 
   let partnerName = "PIYU";
-
-  // 🧸 Playful dodge settings
-  let dodgeCount = 0;
-  const maxDodges = 6; // how many times it dodges before giving up
-  const moveDistance = 110; // how far it slides each dodge (px)
+  let hoverCount = 0;
 
   // 🎵 Audio setup
   if (audio) audio.volume = parseFloat(volumeSlider?.value || "0.7");
@@ -69,10 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
       typeWriterEffect(document.querySelector(".typed-text"), "You and me, Valentine style?");
     }, 300);
 
-    // ✅ Prepare the NO button for smooth movement
+    // ✅ smooth movement setup
     if (noButton) {
-      noButton.style.position = "relative";     // stays in layout, just slides
-      noButton.style.transition = "transform 0.35s ease"; // smooth + not too fast
+      noButton.style.position = "relative";
+      noButton.style.transition = "transform 0.35s ease";
       noButton.style.willChange = "transform";
     }
   }
@@ -94,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => container.remove(), 5000);
   }
 
-  // ✅ YES
+  // ✅ YES click
   yesButton?.addEventListener("click", () => {
     questionText.innerHTML = `
       <span class="partner-name">${partnerName}</span><br>
@@ -106,39 +102,35 @@ document.addEventListener("DOMContentLoaded", function () {
     createHearts();
   });
 
-  // 😌 NO (playful, slow dodge — not aggressive)
-  function slowDodge() {
-    dodgeCount++;
+  // 😌 NO — slow playful tease (never disappears)
+  function teaseNoButton() {
+    hoverCount++;
 
-    // First 2 times: do nothing (feels natural)
-    if (dodgeCount <= 2) return;
+    // ✅ First 5 tries: no movement (feels natural)
+    if (hoverCount <= 5) return;
 
-    // After that: gentle sliding left/right
-    const direction = dodgeCount % 2 === 0 ? 1 : -1;
-    const slide = Math.min(moveDistance, 70 + dodgeCount * 10); // increases slowly
-
-    noButton.style.transform = `translateX(${direction * slide}px)`;
-
-    // Optional tease text after a few dodges (not desperate)
-    if (dodgeCount === 4) {
-      questionText.innerHTML += `<br><span class="no-choice-text">Hmm… thinking too hard? 😌</span>`;
+    // ✅ 6–10 tries: tiny slides left/right
+    if (hoverCount <= 10) {
+      const dir = hoverCount % 2 === 0 ? 1 : -1;
+      noButton.style.transform = `translateX(${dir * 25}px)`;
+      return;
     }
 
-    // After max dodges: bring it back (so it doesn't feel forced)
-    if (dodgeCount >= maxDodges) {
-      setTimeout(() => {
-        noButton.style.transform = "translateX(0)";
-      }, 500);
-      dodgeCount = 2; // reset to keep it playful, not impossible
+    // ✅ After 10 tries: slightly bigger slides, still not insane
+    const dir = hoverCount % 2 === 0 ? 1 : -1;
+    const slide = Math.min(80, 25 + (hoverCount - 10) * 5);
+    noButton.style.transform = `translateX(${dir * slide}px)`;
+
+    // ✅ Cute tease line only once
+    if (hoverCount === 12) {
+      questionText.innerHTML += `<br><span class="no-choice-text">Still thinking? 😌</span>`;
     }
   }
 
-  // Trigger dodge when mouse gets close (but only after 2 tries)
-  noButton?.addEventListener("mouseenter", slowDodge);
+  noButton?.addEventListener("mouseenter", teaseNoButton);
 
-  // Still allow clicking "No" if he really wants
+  // If he clicks NO successfully, just tease (don’t break flow)
   noButton?.addEventListener("click", () => {
-    // If he clicks No successfully, just tease lightly
     questionText.innerHTML += `<br><span class="no-choice-text">Bold choice 😏</span>`;
   });
 
