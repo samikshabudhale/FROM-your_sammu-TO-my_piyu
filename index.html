@@ -13,20 +13,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
 
     <title>LoveOh</title>
-    <meta name="description" content="Create and send a personalized Valentine's Day card with beautiful animation. It's a lovely gift idea for couples or friends!" />
 </head>
 
 <body>
 
-    <!-- 🎵 Background Music (autoplay muted due to browser rules) -->
-    <audio id="background-music" preload="auto" loop muted autoplay>
+    <!-- 🎵 Background Music -->
+    <audio id="background-music" preload="auto" loop>
         <source src="Ok%20Jaanu%20Title%20Track.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
     </audio>
 
-    <!-- Heart-shaped SVG background -->
+    <!-- Heart background -->
     <div class="heart-background">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 24 24">
             <defs>
                 <radialGradient id="heart-gradient" cx="50%" cy="50%" r="50%">
                     <stop offset="0%" stop-color="var(--color1)" />
@@ -34,7 +32,8 @@
                     <stop offset="100%" stop-color="var(--color3)" />
                 </radialGradient>
             </defs>
-            <path d="M12 4.248c-3.148-5.402-12-3.825-12 2.944 0 4.661 5.571 9.427 12 15.808
+            <path d="M12 4.248c-3.148-5.402-12-3.825-12 2.944
+                     0 4.661 5.571 9.427 12 15.808
                      6.43-6.381 12-11.147 12-15.808
                      0-6.792-8.875-8.306-12-2.944z"
                   fill="url(#heart-gradient)" />
@@ -50,25 +49,8 @@
         </nav>
 
         <div class="main-wrapper">
-            <div class="aside-wrapper">
-                <aside>
-                    <div class="aside-left-wrapper">
-                        <div class="aside left hide">
-                            <div class="video-card">
-                                <div class="glare"></div>
-                                <video src="assets/funny video.mp4"></video>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-            </div>
 
             <div class="main-section-wrapper">
-                <div class="threed-wrapper">
-                    <div class="threed-box hide">
-                        <img src="assets/bears.gif" alt="Cute bears kissing">
-                    </div>
-                </div>
 
                 <div class="question-wrapper">
                     <div class="question-box">
@@ -77,44 +59,43 @@
                 </div>
 
                 <div class="choice-wrapper">
+                    <!-- 🔊 Audio hint -->
+                    <p class="audio-hint">🔊 Tap to turn the music on</p>
+
                     <div class="click-box">
-                        <!-- 🔊 Hint text added here -->
-                        <p class="audio-hint">🔊 Tap to turn the music on</p>
                         <button>Click to find out</button>
                     </div>
+
                     <div class="choice-box hide">
                         <button>Yes ❤️</button>
                         <button>No ❌</button>
                     </div>
                 </div>
+
+                <div class="threed-wrapper">
+                    <div class="threed-box hide">
+                        <img src="assets/bears.gif" alt="Cute bears kissing">
+                    </div>
+                </div>
+
             </div>
 
-            <div class="aside-wrapper">
-                <aside>
-                    <div class="aside-wrapper">
-                        <div class="aside right">
-                            <button id="mute-button">
-                                <i class="fa fa-volume-up"></i>
-                            </button>
-                            <input type="range" id="volume-slider"
-                                   min="0" max="1" step="0.01" value="1">
-                        </div>
-                    </div>
-                </aside>
-            </div>
+            <aside>
+                <div class="aside right">
+                    <button id="mute-button"><i class="fa fa-volume-up"></i></button>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+                </div>
+            </aside>
+
         </div>
 
         <footer>
-            <a href="https://github.com/2bTwist/Valentines-Day-Web-Project" target="_blank">
-                <p>Designed by E <i style="font-size:20px" class="fa">&#xf09b;</i></p>
-            </a>
+            <p>Designed by E ❤️</p>
         </footer>
     </div>
 
     <!-- Scripts -->
-    <script src="intro.js" defer></script>
-    <script src="card.js" defer></script>
-    <script src="main.js?v=2" defer></script>
+    <script src="main.js?v=3" defer></script>
 
 </body>
 </html>
